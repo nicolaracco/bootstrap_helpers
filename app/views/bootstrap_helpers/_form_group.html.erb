@@ -1,0 +1,7 @@
+<div class="form-group <%= options[:class] %>"
+     <%= "id=\"#{options[:id]}\"" if options[:id] %>>
+  <%= content %>
+  <%- if help %>
+    <p class="help-block"><%= help.html_safe %></p>
+  <% end %>
+</div>

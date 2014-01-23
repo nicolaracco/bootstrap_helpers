@@ -1,0 +1,9 @@
+<div class="input-group">
+  <% if prefix.present? %>
+    <span class="input-group-addon"><%= prefix %></span>
+  <% end %>
+  <%= content %>
+  <% if suffix.present? %>
+    <span class="input-group-addon"><%= suffix %></span>
+  <% end %>
+</div>
