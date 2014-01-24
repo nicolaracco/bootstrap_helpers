@@ -12,7 +12,7 @@ module BootstrapHelpers
         add_class_to_options options, 'form-control'
         show_label = options.key?(:label) ? options.delete(:label) : true
         template.capture do
-          template.concat label(field) if show_label
+          template.concat label(field, options) if show_label
           template.concat input_field(field, *args, options) { |input_options|
             super field, input_options
           }
@@ -25,7 +25,7 @@ module BootstrapHelpers
       add_class_to_options options, 'form-control'
       show_label = options.key?(:label) ? options.delete(:label) : true
       template.capture do
-        template.concat label(field) if show_label
+        template.concat label(field, options) if show_label
         template.concat input_field(field, *args, options) { |input_options|
           super field, input_options
         }
@@ -47,7 +47,7 @@ module BootstrapHelpers
       add_class_to_options options, 'form-control'
       show_label = options.key?(:label) ? options.delete(:label) : true
       template.capture do
-        template.concat label(field) if show_label
+        template.concat label(field, options) if show_label
         template.concat input_field(field, options) { |input_options|
           super field, items, select_options, input_options
         }
@@ -59,7 +59,7 @@ module BootstrapHelpers
       show_label = options.key?(:label) ? options.delete(:label) : true
       input_field(field, *args, options) do |input_options|
         if show_label
-          label field do
+          label field, options do
             template.capture do
               template.concat super field, input_options
               template.concat ' '
