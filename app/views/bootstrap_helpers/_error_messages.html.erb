@@ -1,6 +1,10 @@
-<div class="alert alert-danger alert-dismissable fade in">
-  <button type="button" class="close" aria-hidden="true" data-dismiss="alert">&times;</button>
-  <%- errors.full_messages.each do |message| %>
-    <p><%= message %></p>
-  <% end %>
-</div>
+<% if inline %>
+  <p class="alert alert-danger"><%= errors.full_messages.first %></p>
+<% else %>
+  <div class="alert alert-danger alert-dismissable fade in">
+    <button type="button" class="close" aria-hidden="true" data-dismiss="alert">&times;</button>
+    <%- errors.full_messages.each do |message| %>
+      <p><%= message %></p>
+    <% end %>
+  </div>
+<% end %>

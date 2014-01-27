@@ -2,7 +2,7 @@ module BootstrapHelpers
   class FormBuilder < ::ActionView::Helpers::FormBuilder
     def error_messages
       if object.errors.any?
-        render_partial 'input_error_wrapper', errors: object.errors
+        render_partial 'error_messages', errors: object.errors, inline: options[:inline]
       end
     end
 
@@ -11,16 +11,16 @@ module BootstrapHelpers
         options = args.extract_options!
         add_class_to_options options, 'form-control'
         show_label = options.key?(:label) ? options.delete(:label) : true
-        template.capture do
-          if show_label
-            label_options = show_label == true ? {} : show_label
-            add_class_to_options label_options, 'sr-only' if self.options[:inline]
-            options[:label] = label_options
-            template.concat label(field, options)
+        input_field(field, *args, options) do |input_options|
+          template.capture do
+            if show_label
+              label_options = show_label == true ? {} : show_label
+              add_class_to_options label_options, 'sr-only' if self.options[:inline]
+              options[:label] = label_options
+              template.concat label(field, options)
+            end
+            template.concat super field, input_options
           end
-          template.concat input_field(field, *args, options) { |input_options|
-            super field, input_options
-          }
         end
       end
     end
@@ -29,11 +29,11 @@ module BootstrapHelpers
       options = args.extract_options!
       add_class_to_options options, 'form-control'
       show_label = options.key?(:label) ? options.delete(:label) : true
-      template.capture do
-        template.concat label(field, options) if show_label
-        template.concat input_field(field, *args, options) { |input_options|
-          super field, input_options
-        }
+      input_field field, *args, options do
+        template.capture do
+          template.concat label(field, options) if show_label
+          template.concat super field, input_options
+        end
       end
     end
 
@@ -51,11 +51,9 @@ module BootstrapHelpers
     def select field, items, select_options = {}, options = {}
       add_class_to_options options, 'form-control'
       show_label = options.key?(:label) ? options.delete(:label) : true
-      template.capture do
+      input_field field, options do |input_options|
         template.concat label(field, options) if show_label
-        template.concat input_field(field, options) { |input_options|
-          super field, items, select_options, input_options
-        }
+        template.concat super field, items, select_options, input_options
       end
     end
 
