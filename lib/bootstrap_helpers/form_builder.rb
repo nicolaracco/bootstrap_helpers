@@ -9,9 +9,12 @@ module BootstrapHelpers
     %w(text email date file password).each do |text_type|
       define_method "#{text_type}_field" do |field, *args|
         options = args.extract_options!
-        add_class_to_options options, 'form-control'
-        show_label = options.key?(:label) ? options.delete(:label) : true
-        input_field(field, *args, options) do |input_options|
+
+        group_options = options.delete(:group) || {}
+        group field, group_options do
+          add_class_to_options options, 'form-control'
+          show_label = options.key?(:label) ? options.delete(:label) : true
+
           template.capture do
             if show_label
               label_options = show_label == true ? {} : show_label
@@ -19,7 +22,7 @@ module BootstrapHelpers
               options[:label] = label_options
               template.concat label(field, options)
             end
-            template.concat super field, input_options
+            template.concat input_field(field, *args, options) { |opts| super field, opts }
           end
         end
       end
@@ -27,12 +30,15 @@ module BootstrapHelpers
 
     def text_area field, *args
       options = args.extract_options!
-      add_class_to_options options, 'form-control'
-      show_label = options.key?(:label) ? options.delete(:label) : true
-      input_field field, *args, options do |input_options|
+      group_options = options.delete(:group) || {}
+
+      group field, group_options do
+        add_class_to_options options, 'form-control'
+        show_label = options.key?(:label) ? options.delete(:label) : true
+
         template.capture do
           template.concat label(field, options) if show_label
-          template.concat super field, input_options
+          template.concat input_field(field, *args, options) { |opts| super field, opts }
         end
       end
     end
@@ -49,11 +55,16 @@ module BootstrapHelpers
     end
 
     def select field, items, select_options = {}, options = {}
-      add_class_to_options options, 'form-control'
-      show_label = options.key?(:label) ? options.delete(:label) : true
-      input_field field, options do |input_options|
-        template.concat label(field, options) if show_label
-        template.concat super field, items, select_options, input_options
+      group_options = options.delete(:group) || {}
+
+      group field, group do
+        add_class_to_options options, 'form-control'
+        show_label = options.key?(:label) ? options.delete(:label) : true
+
+        template.capture do
+          template.concat label(field, options) if show_label
+          template.concat input_field(field, options) { |opts| super field, items, select_options, opts }
+        end
       end
     end
 
