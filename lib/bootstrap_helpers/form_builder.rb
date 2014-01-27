@@ -12,7 +12,12 @@ module BootstrapHelpers
         add_class_to_options options, 'form-control'
         show_label = options.key?(:label) ? options.delete(:label) : true
         template.capture do
-          template.concat label(field, options) if show_label
+          if show_label
+            label_options = show_label == true ? {} : show_label
+            add_class_to_options label_options, 'sr-only' if self.options[:inline]
+            options[:label] = label_options
+            template.concat label(field, options)
+          end
           template.concat input_field(field, *args, options) { |input_options|
             super field, input_options
           }
@@ -97,7 +102,9 @@ module BootstrapHelpers
       unless in_group?
         return group(field, group_options) { input_field field, options, &block }
       end
-
+      if self.options[:inline]
+        options[:placeholder] ||= object.class.human_attribute_name field
+      end
       if field_required?(field) && !options.key?(:required)
         options[:required] = true
       end

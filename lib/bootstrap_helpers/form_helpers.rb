@@ -6,6 +6,11 @@ module BootstrapHelpers
         if method == 'form_for'
           options[:html] ||= {}
           options[:html][:role] ||= 'form'
+          if options[:inline]
+            options[:html][:class] ||= ''
+            options[:html][:class] << ' form-inline'
+            options[:html][:class].strip!
+          end
         end
         options[:builder] = FormBuilder
 
