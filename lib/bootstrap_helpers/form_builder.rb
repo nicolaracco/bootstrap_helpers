@@ -29,7 +29,7 @@ module BootstrapHelpers
       options = args.extract_options!
       add_class_to_options options, 'form-control'
       show_label = options.key?(:label) ? options.delete(:label) : true
-      input_field field, *args, options do
+      input_field field, *args, options do |input_options|
         template.capture do
           template.concat label(field, options) if show_label
           template.concat super field, input_options
