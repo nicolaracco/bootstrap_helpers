@@ -90,9 +90,13 @@ module BootstrapHelpers
       options[:group] ||= {}
       add_class_to_options options[:group], 'has-error' if field_invalid?(field)
 
-      in_group do
-        content = template.capture { block.call }
-        render_partial 'form_group', options: options[:group], help: options[:help], content: content
+      if in_group?
+        in_group do
+          content = template.capture { block.call }
+          render_partial 'form_group', options: options[:group], help: options[:help], content: content
+        end
+      else
+        block.call
       end
     end
 
