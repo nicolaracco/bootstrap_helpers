@@ -57,7 +57,7 @@ module BootstrapHelpers
     def select field, items, select_options = {}, options = {}
       group_options = options.delete(:group) || {}
 
-      group field, group do
+      group field, group_options do
         add_class_to_options options, 'form-control'
         show_label = options.key?(:label) ? options.delete(:label) : true
 
