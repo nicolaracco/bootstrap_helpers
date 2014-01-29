@@ -6,7 +6,7 @@ module BootstrapHelpers
       end
     end
 
-    %w(text email date datetime file password).each do |text_type|
+    %w(text email date datetime datetime_local file password).each do |text_type|
       define_method "#{text_type}_field" do |field, *args|
         options = args.extract_options!
 
