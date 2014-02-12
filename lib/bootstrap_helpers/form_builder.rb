@@ -68,6 +68,20 @@ module BootstrapHelpers
       end
     end
 
+    def collection_select field, items, id_key, name_key, select_options = {}, options = {}
+      group_options = options.delete(:group) || {}
+
+      group field, group_options do
+        add_class_to_options options, 'form-control'
+        show_label = options.key?(:label) ? options.delete(:label) : true
+
+        template.capture do
+          template.concat label(field, options) if show_label
+          template.concat input_field(field, options) { |opts| super field, items, id_key, name_key, select_options, opts }
+        end
+      end
+    end
+
     def check_box field, *args
       options = args.extract_options!
       show_label = options.key?(:label) ? options.delete(:label) : true
