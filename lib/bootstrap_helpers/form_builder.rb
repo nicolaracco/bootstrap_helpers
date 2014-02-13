@@ -51,6 +51,7 @@ module BootstrapHelpers
       elsif field_required?(field)
         add_class_to_options label_options, 'required'
       end
+      args.unshift options[:label] if options[:label] && options[:label] != true
       super field, *args, label_options
     end
 
@@ -82,6 +83,28 @@ module BootstrapHelpers
       end
     end
 
+    def radio_button field, value, *args
+      options = args.extract_options!
+      show_label = options.key?(:label) ? options.delete(:label) : true
+      input_field(field, *args, options) do |input_options|
+        if show_label
+          label field, options do
+            template.capture do
+              template.concat super field, value, input_options
+              template.concat ' '
+              if show_label != true
+                template.concat show_label
+              else
+                template.concat object.class.human_attribute_name field
+              end
+            end
+          end
+        else
+          super field, value, input_options
+        end
+      end
+    end
+
     def check_box field, *args
       options = args.extract_options!
       show_label = options.key?(:label) ? options.delete(:label) : true
@@ -91,7 +114,11 @@ module BootstrapHelpers
             template.capture do
               template.concat super field, input_options
               template.concat ' '
-              template.concat object.class.human_attribute_name field
+              if show_label != true
+                template.concat show_label
+              else
+                template.concat object.class.human_attribute_name field
+              end
             end
           end
         else
